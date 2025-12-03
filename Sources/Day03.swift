@@ -62,6 +62,10 @@ struct Day03: AdventDay {
   }
 
   func maxJoltageForRowPart2(_ row: [Int]) -> Int {
+    // we search in a sliding window.
+    // if we have 12 digits to pick, and the entire number is 16 digits,
+    // it's always best to pick the biggest digit we can find in the first 4 digits.
+    // then, we find the remaining 11 in the window created by adjusting the window ends
     var remainingDigits = 12
     var maxJoltage: Int = 0
 
