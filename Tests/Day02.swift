@@ -2,7 +2,6 @@ import Testing
 
 @testable import AdventOfCode
 
-// pass.
 struct Day02Tests {
   let testData = """
     11-22,95-115,998-1012,1188511880-1188511890,222220-222224,
@@ -16,7 +15,7 @@ struct Day02Tests {
   }
 
   @Test func testPart2() async throws {
-    let challenge = Day00(data: testData)
-    #expect(String(describing: challenge.part2()) == "32000")
+    let challenge = Day02(data: testData)
+    #expect(String(describing: challenge.part2()) == "4174379265")
   }
 }

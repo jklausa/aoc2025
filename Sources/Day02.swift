@@ -40,6 +40,32 @@ struct Day02: AdventDay {
   }
 
   func part2() -> Any {
-    return false
+    var candidates: [Int] = []
+
+    for range in entities {
+      for number in range {
+        let string = String(number)
+
+        // it's only possible for the pattern to be repeating, if it takes half (or less)
+        // of the entire string, otherwise it won't be able to repeat.
+        let maximalLength = string.count / 2
+
+        for currentLength in stride(from: 1, through: maximalLength, by: 1) {
+          // then we iterate over possible prefix lengths to see if they are repeating.
+          let prefix = string[string.startIndex ..< string.index(string.startIndex, offsetBy: currentLength)]
+
+          // if after removing the occurences of the patern there's only empty string left, that means that the pattern is repeating
+          // and we got a match.
+          let result = string.replacingOccurrences(of: prefix, with: "")
+
+          if result.isEmpty {
+            candidates.append(number)
+            break
+          }
+        }
+      }
+    }
+
+    return candidates.reduce(0, +)
   }
 }
