@@ -1,4 +1,5 @@
 import Algorithms
+import Foundation
 
 struct Day03: AdventDay {
   var data: String
@@ -16,14 +17,14 @@ struct Day03: AdventDay {
     var rowJoltage: [Int] = []
 
     for row in entities {
-      rowJoltage.append(maxJoltageForRow(row))
+      rowJoltage.append(maxJoltageForRowPart1(row))
     }
 
     return rowJoltage.reduce(0, +)
   }
 
-  func maxJoltageForRow(_ row: [Int]) -> Int {
-    // Value: Indexes,
+  func maxJoltageForRowPart1(_ row: [Int]) -> Int {
+    // Value: Indexes
     let position: [Int: [Int]] = row.enumerated().reduce(into: [:]) { result, pair in
       result[pair.element, default: []].append(pair.offset)
     }
@@ -50,9 +51,39 @@ struct Day03: AdventDay {
     fatalError()
   }
 
-  // Replace this with your solution for the second part of the day's challenge.
   func part2() -> Any {
-    // Sum the maximum entries in each set of data
-    entities.map { $0.max() ?? 0 }.reduce(0, +)
+    var rowJoltage: [Int] = []
+
+    for row in entities {
+      rowJoltage.append(maxJoltageForRowPart2(row))
+    }
+
+    return rowJoltage.reduce(0, +)
+  }
+
+  func maxJoltageForRowPart2(_ row: [Int]) -> Int {
+    var remainingDigits = 12
+    var maxJoltage: Int = 0
+
+    var sliceToSearch = 0...row.count - remainingDigits
+
+    while remainingDigits > 0 {
+      let (digit, index) = findBestDigit(row, range: sliceToSearch)
+
+      maxJoltage += digit * Int(pow(10.0, Double(remainingDigits - 1)))
+      
+      remainingDigits -= 1
+
+      sliceToSearch = index + 1 ... (row.count - remainingDigits)
+    }
+
+    return maxJoltage
+  }
+
+  private func findBestDigit(_ row: [Int], range: ClosedRange<Int>)
+  -> (Int, Int) {
+    let highestInRange = row[range].max()!
+
+    return (highestInRange, row[range].firstIndex(of: highestInRange)!)
   }
 }
