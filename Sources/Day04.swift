@@ -32,8 +32,32 @@ struct Day04: AdventDay {
 
   func part1() -> Any {
     let map = entities
-    var accessiblePoints: Set<Point> = []
 
+    return findAccessibleRolls(in: map).count
+  }
+
+  func part2() -> Any {
+    var map = entities
+    var totalRemovedRolls: Set<Point> = []
+
+    while true {
+      let removedRolls = findAccessibleRolls(in: map)
+      if removedRolls.count == 0 {
+        break
+      }
+
+      for point in removedRolls {
+        map[point.row][point.column] = .emptySpace
+      }
+      
+      totalRemovedRolls.formUnion(removedRolls)
+    }
+
+    return totalRemovedRolls.count
+  }
+
+  func findAccessibleRolls(in map: [[Cell]]) -> Set<Point> {
+    var accessiblePoints: Set<Point> = []
 
     for (rowIndex, row) in map.enumerated() {
       for (columnIndex, column) in row.enumerated() {
@@ -58,10 +82,6 @@ struct Day04: AdventDay {
       }
     }
 
-    return accessiblePoints.count
-  }
-
-  func part2() -> Any {
-    return 0
+    return accessiblePoints
   }
 }
