@@ -47,10 +47,64 @@ struct Day06: AdventDay {
     return results.reduce(0, +)
   }
 
-  // Replace this with your solution for the second part of the day's challenge.
+  struct Problem {
+    var operation: Operation
+    var numbers: [Int]
+  }
+
   func part2() -> Any {
-    return 0
-    // Sum the maximum entries in each set of data
-//    entities.map { $0.max() ?? 0 }.reduce(0, +)
+    var problems: [Problem] = []
+    let lines = data.split(separator: "\n")
+
+    let longestLine = lines.map(\.count).max()
+
+    var numbersForCurrentProblem = [Int]()
+
+    for columnIndex in stride(from: longestLine! - 1, through: 0, by: -1) {
+      let charactersAtIndex = lines
+        .map(Array.init)
+        .compactMap {
+          if $0.indices.contains(columnIndex) {
+            $0[columnIndex]
+          } else {
+            nil
+          }
+        }
+
+
+      if charactersAtIndex.allSatisfy({ $0.isWhitespace }) {
+        continue
+      }
+
+      let number = Int(String(charactersAtIndex.filter { $0.isNumber }))!
+      
+      numbersForCurrentProblem.append(number)
+
+      if charactersAtIndex.last == "*" {
+        problems
+          .append(
+            .init(operation: .multiplication, numbers: numbersForCurrentProblem)
+          )
+        numbersForCurrentProblem = []
+      } else if charactersAtIndex.last == "+" {
+        problems
+          .append(
+            .init(operation: .addition, numbers: numbersForCurrentProblem)
+          )
+        numbersForCurrentProblem = []
+      }
+
+    }
+
+    return problems
+      .map {
+        if Operation.multiplication == $0.operation {
+          return $0.numbers.reduce(1, *)
+        } else {
+          return $0.numbers.reduce(0, +)
+        }
+      }
+      .reduce(0, +)
+
   }
 }
